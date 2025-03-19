@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
+import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 import { AppConfigService } from './app-config/app-config.service';
 import { Environment } from './core/enums/environment.enum';
@@ -33,7 +34,10 @@ async function bootstrap() {
   );
 
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new ExceptionsFilter(httpAdapter));
+  app.useGlobalFilters(
+    new PrismaClientExceptionFilter(httpAdapter),
+    new ExceptionsFilter(httpAdapter),
+  );
 
   const appConfigService = app.get(AppConfigService);
   app.use(

@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model codigo {
+  id_codigo      Int              @id @default(autoincrement())
+  nombre_codigo  String           @db.VarChar(255)
+  descripcion    String?
+  registro       registro[]
+  seccion_codigo seccion_codigo[]
+}
+
+model grupo_edad {
+  id_grupo_edad     Int        @id @default(autoincrement())
+  nombre_grupo_edad String     @db.VarChar(255)
+  descripcion       String?
+  edad_minima       Int?
+  edad_maxima       Int?
+  registro          registro[]
+}
+
+model operador {
+  id_operador Int        @id
+  persona     persona    @relation(fields: [id_operador], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
+  registro    registro[]
+}
+
+model permiso {
+  id_permiso     Int           @id @default(autoincrement())
+  nombre_permiso String        @db.VarChar(255)
+  descripcion    String?
+  rol_permiso    rol_permiso[]
+}
+
+model persona {
+  id_persona Int       @id @default(autoincrement())
+  nombre     String    @db.VarChar(255)
+  apellido   String    @db.VarChar(255)
+  email      String    @unique @db.VarChar(255)
+  telefono   String?   @db.VarChar(20)
+  operador   operador?
+  usuario    usuario?
+}
+
+model registro {
+  id_registro    Int        @id @default(autoincrement())
+  fecha_registro DateTime?  @default(now()) @db.Timestamp(6)
+  cantidad       Int
+  id_grupo_edad  Int
+  id_usuario     Int
+  id_operador    Int
+  id_codigo      Int
+  codigo         codigo     @relation(fields: [id_codigo], references: [id_codigo], onDelete: Cascade, onUpdate: NoAction)
+  grupo_edad     grupo_edad @relation(fields: [id_grupo_edad], references: [id_grupo_edad], onDelete: Cascade, onUpdate: NoAction)
+  operador       operador   @relation(fields: [id_operador], references: [id_operador], onDelete: Cascade, onUpdate: NoAction)
+  usuario        usuario    @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model rol {
+  id_rol      Int           @id @default(autoincrement())
+  nombre_rol  String        @db.VarChar(255)
+  descripcion String?
+  rol_permiso rol_permiso[]
+  usuario     usuario[]
+}
+
+model rol_permiso {
+  id_rol     Int
+  id_permiso Int
+  permiso    permiso @relation(fields: [id_permiso], references: [id_permiso], onDelete: Cascade, onUpdate: NoAction)
+  rol        rol     @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_rol, id_permiso])
+}
+
+model seccion {
+  id_seccion     Int              @id @default(autoincrement())
+  nombre_seccion String           @db.VarChar(255)
+  descripcion    String?
+  seccion_codigo seccion_codigo[]
+}
+
+model seccion_codigo {
+  id_seccion Int
+  id_codigo  Int
+  codigo     codigo  @relation(fields: [id_codigo], references: [id_codigo], onDelete: Cascade, onUpdate: NoAction)
+  seccion    seccion @relation(fields: [id_seccion], references: [id_seccion], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_seccion, id_codigo])
+}
+
+model usuario {
+  id_usuario     Int        @id
+  contrasena     String     @db.VarChar(255)
+  fecha_creacion DateTime?  @default(now()) @db.Timestamp(6)
+  id_rol         Int
+  registro       registro[]
+  rol            rol        @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade, onUpdate: NoAction)
+  persona        persona    @relation(fields: [id_usuario], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
+}

@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Language {
+  SPANISH @map("es-ES") // Spanish (Spain)
+  ENGLISH @map("en-US") // English (United States)
+}
+
 model codigo {
   id_codigo      Int              @id @default(autoincrement())
   nombre_codigo  String           @db.VarChar(255)
@@ -97,7 +102,8 @@ model seccion_codigo {
 model usuario {
   id_usuario     Int        @id
   contrasena     String     @db.VarChar(255)
-  fecha_creacion DateTime?  @default(now()) @db.Timestamp(6)
+  fecha_creacion DateTime   @default(now()) @db.Timestamp(6)
+  language       Language   @default(SPANISH)
   id_rol         Int
   registro       registro[]
   rol            rol        @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade, onUpdate: NoAction)

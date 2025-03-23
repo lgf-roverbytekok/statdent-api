@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppConfigModule } from './app-config/app-config.module';
 import { HealthModule } from './modules/health/health.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { HealthModule } from './modules/health/health.module';
       isGlobal: true,
     }),
     HealthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

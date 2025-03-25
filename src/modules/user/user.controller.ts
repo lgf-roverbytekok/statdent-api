@@ -8,16 +8,16 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-
-import { ApiExtraModels } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginatedResponseDto } from '../../core/dto/paginated-response.dto';
+import { PaginatedResponseDto } from 'src/core/dto/paginated-response.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { BaseQueryDto } from 'src/core/dto/base-query.dto';
 
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

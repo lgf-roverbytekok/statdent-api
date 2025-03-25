@@ -125,6 +125,33 @@ export class UserService {
     return new UserResponseDto(user);
   }
 
+  async findByEmail(email: string): Promise<UserWithRelations> {
+    try {
+      const user = await this.prisma.usuario.findFirst({
+        where: {
+          persona: {
+            email: {
+              equals: email.toLowerCase().trim(),
+              mode: 'insensitive', // For PostgreSQL
+            },
+          },
+        },
+        include: {
+          persona: true,
+          rol: true,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException(`Usuario con email ${email} no encontrado`);
+      }
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async update(
     id: number,
     updateUserDto: UpdateUserDto,

@@ -57,7 +57,8 @@ export class AuthService {
 
       return user;
     } catch (error) {
-      throw error;
+      this.logger.log(`[validateUser]: ${error}`);
+      throw new UnauthorizedException('Usuario o contraseña incorrecta');
     }
   }
 

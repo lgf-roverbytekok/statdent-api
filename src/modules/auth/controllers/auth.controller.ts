@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -14,6 +14,7 @@ import { TokensResponseDto } from '../dto/tokens-response.dto';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { JwtPayload } from '../types/jwt-payload';
 import { LogoutDto } from '../dto/logout.dto';
+import { UserResponseDto } from '../../user/dto/user-response.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -61,5 +62,18 @@ export class AuthController {
     @Body() logoutDto: LogoutDto,
   ): Promise<void> {
     await this.authService.logout(user.sub, logoutDto.refreshToken);
+  }
+
+  @Get('me')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Obtener información del usuario actual' })
+  @ApiResponse({
+    status: 200,
+    description: 'Información del usuario actual',
+    type: UserResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'No autorizado' })
+  async getMe(@CurrentUser() user: JwtPayload): Promise<UserResponseDto> {
+    return this.authService.getCurrentUser(user.sub);
   }
 }

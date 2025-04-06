@@ -104,4 +104,14 @@ export class AuthService {
   async logout(userId: number, token: string) {
     await this.invalidateRefreshToken(token);
   }
+
+  async getCurrentUser(userId: number): Promise<UserResponseDto> {
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    return user;
+  }
 }

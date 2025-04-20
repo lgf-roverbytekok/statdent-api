@@ -184,8 +184,9 @@ export class UserService {
       }
 
       if (updateUserDto.roleId) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        updateData.id_rol = updateUserDto.roleId;
+        updateData.rol = {
+          connect: { id_rol: updateUserDto.roleId },
+        };
       }
 
       if (updateUserDto.language) {

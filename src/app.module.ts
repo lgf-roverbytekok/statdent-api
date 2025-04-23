@@ -8,6 +8,7 @@ import { AppConfigModule } from './app-config/app-config.module';
 import { HealthModule } from './modules/health/health.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { SectionModule } from './modules/section/section.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
     HealthModule,
     AuthModule,
     UserModule,
+    SectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

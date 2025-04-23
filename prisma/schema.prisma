@@ -13,11 +13,15 @@ enum Language {
 }
 
 model codigo {
-  id_codigo      Int              @id @default(autoincrement())
-  nombre_codigo  String           @db.VarChar(255)
-  descripcion    String?
-  registro       registro[]
-  seccion_codigo seccion_codigo[]
+  id_codigo     Int        @id @default(autoincrement())
+  nombre_codigo String     @db.VarChar(255)
+  descripcion   String?
+  seccion_id    Int
+  seccion       seccion    @relation(fields: [seccion_id], references: [id_seccion])
+  parent_id     Int?
+  parent        codigo?    @relation("CodigoToCodigo", fields: [parent_id], references: [id_codigo])
+  children      codigo[]   @relation("CodigoToCodigo")
+  registro      registro[]
 }
 
 model grupo_edad {
@@ -84,19 +88,10 @@ model rol_permiso {
 }
 
 model seccion {
-  id_seccion     Int              @id @default(autoincrement())
-  nombre_seccion String           @db.VarChar(255)
+  id_seccion     Int      @id @default(autoincrement())
+  nombre_seccion String   @db.VarChar(255)
   descripcion    String?
-  seccion_codigo seccion_codigo[]
-}
-
-model seccion_codigo {
-  id_seccion Int
-  id_codigo  Int
-  codigo     codigo  @relation(fields: [id_codigo], references: [id_codigo], onDelete: Cascade, onUpdate: NoAction)
-  seccion    seccion @relation(fields: [id_seccion], references: [id_seccion], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([id_seccion, id_codigo])
+  codigos        codigo[]
 }
 
 model usuario {

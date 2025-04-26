@@ -8,7 +8,7 @@ export class CreateSectionDto {
   })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  nombre_seccion: string;
 
   @ApiPropertyOptional({
     description: 'Descripción adicional de la sección',
@@ -16,5 +16,5 @@ export class CreateSectionDto {
   })
   @IsString()
   @IsOptional()
-  description?: string;
+  descripcion?: string;
 }

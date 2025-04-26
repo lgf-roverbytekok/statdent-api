@@ -11,17 +11,14 @@ export class SectionService {
 
   async create(dto: CreateSectionDto) {
     return this.prisma.seccion.create({
-      data: {
-        nombre_seccion: dto.name,
-        descripcion: dto.description,
-      },
+      data: dto,
     });
   }
 
   async findAll() {
-    return this.prisma.seccion.findMany({
+    return this.prisma.seccion.findMany(/*{
       include: { codigos: true }, // Si quieres ver los códigos
-    });
+    }*/);
   }
 
   async findOne(id: number) {
@@ -39,10 +36,7 @@ export class SectionService {
 
     return this.prisma.seccion.update({
       where: { id_seccion: id },
-      data: {
-        nombre_seccion: dto.name,
-        descripcion: dto.description,
-      },
+      data: dto,
     });
   }
 

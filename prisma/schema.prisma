@@ -17,7 +17,7 @@ model codigo {
   nombre_codigo String     @db.VarChar(255)
   descripcion   String?
   seccion_id    Int
-  seccion       seccion    @relation(fields: [seccion_id], references: [id_seccion])
+  seccion       seccion    @relation(fields: [seccion_id], references: [id_seccion], onDelete: Cascade)
   parent_id     Int?
   parent        codigo?    @relation("CodigoToCodigo", fields: [parent_id], references: [id_codigo])
   children      codigo[]   @relation("CodigoToCodigo")

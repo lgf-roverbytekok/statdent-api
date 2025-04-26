@@ -10,6 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SectionModule } from './modules/section/section.module';
 import { CodeModule } from './modules/code/code.module';
+import { AgeGroupModule } from './modules/age-group/age-group.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CodeModule } from './modules/code/code.module';
     UserModule,
     SectionModule,
     CodeModule,
+    AgeGroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

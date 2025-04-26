@@ -9,6 +9,7 @@ import { HealthModule } from './modules/health/health.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SectionModule } from './modules/section/section.module';
+import { CodeModule } from './modules/code/code.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SectionModule } from './modules/section/section.module';
     AuthModule,
     UserModule,
     SectionModule,
+    CodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

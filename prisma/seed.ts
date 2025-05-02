@@ -11,7 +11,6 @@ async function main() {
   // Clean up the database (in the correct order to avoid foreign key breaches)
   console.log('🧹 Cleaning old data...');
   await prisma.registro.deleteMany();
-  await prisma.seccion_codigo.deleteMany();
   await prisma.rol_permiso.deleteMany();
   await prisma.usuario.deleteMany();
   await prisma.operador.deleteMany();

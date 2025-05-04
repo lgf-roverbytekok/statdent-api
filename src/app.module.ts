@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SectionModule } from './modules/section/section.module';
 import { CodeModule } from './modules/code/code.module';
 import { AgeGroupModule } from './modules/age-group/age-group.module';
+import { OperatorModule } from './modules/operator/operator.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AgeGroupModule } from './modules/age-group/age-group.module';
     SectionModule,
     CodeModule,
     AgeGroupModule,
+    OperatorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

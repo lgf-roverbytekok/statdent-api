@@ -34,9 +34,9 @@ model grupo_edad {
 }
 
 model operador {
-  id_operador Int        @id
-  persona     persona    @relation(fields: [id_operador], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
-  registro    registro[]
+  id_operador     Int               @id
+  persona         persona           @relation(fields: [id_operador], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
+  registro_diario registro_diario[]
 }
 
 model permiso {
@@ -56,18 +56,29 @@ model persona {
   usuario    usuario?
 }
 
+model registro_diario {
+  id          Int        @id @default(autoincrement())
+  fecha       DateTime   @default(now())
+  id_operador Int
+  operador    operador   @relation(fields: [id_operador], references: [id_operador], onDelete: Cascade)
+  entries     registro[] @relation("batch_entries")
+
+  @@unique([fecha, id_operador]) // only one batch per operator+date
+  @@index([fecha, id_operador])
+}
+
 model registro {
-  id_registro    Int        @id @default(autoincrement())
-  fecha_registro DateTime?  @default(now()) @db.Timestamp(6)
-  cantidad       Int
-  id_grupo_edad  Int
-  id_usuario     Int
-  id_operador    Int
-  id_codigo      Int
-  codigo         codigo     @relation(fields: [id_codigo], references: [id_codigo], onDelete: Cascade, onUpdate: NoAction)
-  grupo_edad     grupo_edad @relation(fields: [id_grupo_edad], references: [id_grupo_edad], onDelete: Cascade, onUpdate: NoAction)
-  operador       operador   @relation(fields: [id_operador], references: [id_operador], onDelete: Cascade, onUpdate: NoAction)
-  usuario        usuario    @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade, onUpdate: NoAction)
+  id_registro        Int             @id @default(autoincrement())
+  id_registro_diario Int
+  registro_diario    registro_diario @relation("batch_entries", fields: [id_registro_diario], references: [id])
+  id_codigo          Int
+  codigo             codigo          @relation(fields: [id_codigo], references: [id_codigo], onDelete: Cascade)
+  id_grupo_edad      Int? // nullable when no age-group
+  grupo_edad         grupo_edad?     @relation(fields: [id_grupo_edad], references: [id_grupo_edad], onDelete: Cascade)
+  cantidad           Int
+
+  @@unique([id_registro_diario, id_codigo, id_grupo_edad])
+  @@index([id_registro_diario])
 }
 
 model rol {
@@ -95,12 +106,11 @@ model seccion {
 }
 
 model usuario {
-  id_usuario     Int        @id
-  contrasena     String     @db.VarChar(255)
-  fecha_creacion DateTime   @default(now()) @db.Timestamp(6)
-  language       Language   @default(SPANISH)
+  id_usuario     Int      @id
+  contrasena     String   @db.VarChar(255)
+  fecha_creacion DateTime @default(now()) @db.Timestamp(6)
+  language       Language @default(SPANISH)
   id_rol         Int
-  registro       registro[]
-  rol            rol        @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade, onUpdate: NoAction)
-  persona        persona    @relation(fields: [id_usuario], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
+  rol            rol      @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade, onUpdate: NoAction)
+  persona        persona  @relation(fields: [id_usuario], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
 }

@@ -31,6 +31,41 @@
 $ npm install
 ```
 
+## 🔧 Configuración del entorno local
+
+Antes de ejecutar la aplicación por primera vez, asegúrate de tener configurado tu archivo de entorno:
+
+1. Copia el archivo `.env.template` como `.env`:
+
+```bash
+cp .env.template .env
+```
+
+2. Completa las variables necesarias en `.env`. Estas incluyen:
+
+- **Conexión a la base de datos PostgreSQL**
+- **Secretos para autenticación JWT**
+- **Puerto en el que se ejecutará la aplicación**
+
+3. Asegúrate de tener una instancia de PostgreSQL en ejecución que coincida con los valores que definiste en `.env`.  
+   Puedes iniciar una base de datos local usando Docker, por ejemplo:
+
+```bash
+docker run --name pg-nest \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=postgres \
+  -p 5433:5432 \
+  -d postgres:15
+```
+
+4. Aplica las migraciones de Prisma y ejecuta el seeding si es necesario:
+
+```bash
+npx prisma migrate deploy
+npx prisma db seed
+```
+
 ## Compile and run the project
 
 ```bash

@@ -1,25 +1,20 @@
-FROM node:22 AS builder
+FROM ghcr.io/puppeteer/puppeteer:latest
+
+USER root
+
+# Crea el grupo de sistema y el usuario con su home
+RUN groupadd -r lgfdev \
+ && useradd -rm -g lgfdev lgfdev
+
+USER lgfdev
 
 WORKDIR /app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json .npmrc ./
-COPY prisma ./prisma/
+# Application dependencies
+COPY --chown=lgfdev:lgfdev package*.json ./
+RUN npm ci
 
-RUN npm ci --only=production
-
-COPY . .
-
-RUN npm run build
-
-FROM node:22 AS runtime
-
-WORKDIR /app
-
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
+COPY --chown=lgfdev:lgfdev . .
 
 EXPOSE 3000
-
-CMD [ "npm", "run", "start:prod" ]
+CMD ["npm", "run", "start:dev"]

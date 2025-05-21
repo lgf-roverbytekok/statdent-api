@@ -13,6 +13,7 @@ import { CodeModule } from './modules/code/code.module';
 import { AgeGroupModule } from './modules/age-group/age-group.module';
 import { OperatorModule } from './modules/operator/operator.module';
 import { DailyRecordModule } from './modules/daily-record/daily-record.module';
+import { CompanyModule } from './modules/company/company.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DailyRecordModule } from './modules/daily-record/daily-record.module';
     AgeGroupModule,
     OperatorModule,
     DailyRecordModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

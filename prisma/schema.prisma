@@ -114,3 +114,12 @@ model usuario {
   rol            rol      @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade, onUpdate: NoAction)
   persona        persona  @relation(fields: [id_usuario], references: [id_persona], onDelete: Cascade, onUpdate: NoAction)
 }
+
+model company {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255) // companyName
+  code      String   @db.VarChar(100) // companyCode
+  logoUrl   String   @db.Text // logoUrl
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

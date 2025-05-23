@@ -14,6 +14,7 @@ import { AgeGroupModule } from './modules/age-group/age-group.module';
 import { OperatorModule } from './modules/operator/operator.module';
 import { DailyRecordModule } from './modules/daily-record/daily-record.module';
 import { CompanyModule } from './modules/company/company.module';
+import { ReportModule } from './modules/report/report.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CompanyModule } from './modules/company/company.module';
     OperatorModule,
     DailyRecordModule,
     CompanyModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

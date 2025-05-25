@@ -8,9 +8,6 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { SectionService } from './section.service';
-import { CreateSectionDto } from './dto/create-section.dto';
-import { UpdateSectionDto } from './dto/update-section.dto';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -19,6 +16,13 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
+import { SectionService } from './section.service';
+import { CreateSectionDto } from './dto/create-section.dto';
+import { UpdateSectionDto } from './dto/update-section.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
+
+@Roles(Role.Statistician)
 @ApiTags('Section')
 @ApiBearerAuth()
 @Controller('section')

@@ -22,7 +22,10 @@ import {
 import { CodeService } from './code.service';
 import { CreateCodeDto } from './dto/create-code.dto';
 import { UpdateCodeDto } from './dto/update-code.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
+@Roles(Role.Statistician)
 @ApiBearerAuth()
 @ApiTags('Code') // Nombre del grupo en Swagger UI
 @Controller('code')

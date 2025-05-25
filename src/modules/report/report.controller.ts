@@ -1,8 +1,4 @@
-import { Controller, Post, Body, Res, Header, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
-import { ReportService } from './report.service';
-import { ReportOptionsDto } from './dto/report-options.dto';
-// import { RolesGuard, Roles } from '../auth/roles.guard';
+import { Controller, Post, Body, Res, Header } from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -13,6 +9,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
+import { Response } from 'express';
+
+import { ReportService } from './report.service';
+import { ReportOptionsDto } from './dto/report-options.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
+
+@Roles(Role.Statistician)
 @Controller('report')
 @ApiTags('Report')
 @ApiBearerAuth()

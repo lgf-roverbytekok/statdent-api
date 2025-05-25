@@ -1,4 +1,5 @@
-import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Body } from '@nestjs/common';
+
 import { CompanyService } from './company.service';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import {
@@ -8,11 +9,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-// import { RolesGuard, Roles } from '../auth/roles.guard';
 
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
+
+@Roles(Role.Admin)
 @Controller('company')
 @ApiTags('Company')
-// @UseGuards(RolesGuard)
 @ApiBearerAuth()
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}

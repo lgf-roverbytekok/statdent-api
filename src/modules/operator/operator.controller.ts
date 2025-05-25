@@ -20,7 +20,10 @@ import { OperatorService } from './operator.service';
 import { CreateOperatorDto } from './dto/create-operator.dto';
 import { UpdateOperatorDto } from './dto/update-operator.dto';
 import { OperatorResponseDto } from './dto/operator-response.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
+@Roles(Role.Statistician)
 @ApiBearerAuth()
 @ApiTags('Operators')
 @Controller('operator')

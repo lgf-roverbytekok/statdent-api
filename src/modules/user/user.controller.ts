@@ -16,7 +16,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginatedResponseDto } from 'src/core/dto/paginated-response.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { BaseQueryDto } from 'src/core/dto/base-query.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
+@Roles(Role.Admin)
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {

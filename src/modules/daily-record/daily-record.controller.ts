@@ -25,7 +25,10 @@ import {
   EntryResultDto,
 } from './dto/daily-record-batch.dto';
 import { PatchRecordCellDto } from './dto/patch-record-cell.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
+@Roles(Role.Statistician)
 @ApiBearerAuth()
 @ApiTags('Daily Record')
 @Controller('daily-record')

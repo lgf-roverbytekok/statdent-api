@@ -19,7 +19,10 @@ import {
 import { AgeGroupService } from './age-group.service';
 import { CreateAgeGroupDto } from './dto/create-age-group.dto';
 import { UpdateAgeGroupDto } from './dto/update-age-group.dto';
+import { Roles } from 'src/modules/auth/decorators/roles.decorator';
+import { Role } from 'src/modules/auth/enums/role.enum';
 
+@Roles(Role.Statistician)
 @ApiBearerAuth()
 @ApiTags('Age Group')
 @Controller('age-group')

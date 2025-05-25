@@ -30,6 +30,11 @@ async function main() {
       nombre_rol: 'Admin',
       descripcion: 'Administrador del sistema',
     },
+    {
+      id_rol: 2,
+      nombre_rol: 'Estadístico',
+      descripcion: 'Usuario encargado de la estadística',
+    },
   ];
 
   await prisma.rol.createMany({

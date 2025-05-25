@@ -20,11 +20,27 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // Method that is executed when the token is validated
+  /**
+   * Se ejecuta automáticamente tras la validación de firma y expiración.
+   * Aquí hacemos un lookup a la base de datos para devolver al usuario completo,
+   * validando que exista y esté activo, y cargando su rol.
+   */
   async validate(payload: JwtPayload): Promise<UserResponseDto> {
     // Reutilizamos findOne() que lanza NotFoundException si no existe
     try {
       const user = await this.userService.findOne(payload.sub);
+
+      if (!user) {
+        throw new UnauthorizedException(
+          'No autorizado para realizar esta acción',
+        );
+      }
+
+      // Si se tiene un flag de activo/deshabilitado:
+      // if (!user.isActive) {
+      //   throw new UnauthorizedException('Usuario deshabilitado');
+      // }
+
       return user;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {

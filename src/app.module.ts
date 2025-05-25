@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 
 import { PrismaModule } from 'nestjs-prisma';
 
@@ -15,6 +16,7 @@ import { OperatorModule } from './modules/operator/operator.module';
 import { DailyRecordModule } from './modules/daily-record/daily-record.module';
 import { CompanyModule } from './modules/company/company.module';
 import { ReportModule } from './modules/report/report.module';
+import { RolesGuard } from './modules/auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -34,6 +36,12 @@ import { ReportModule } from './modules/report/report.module';
     ReportModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard, // ¡RolesGuard aplicado globalmente!
+    },
+  ],
 })
 export class AppModule {}

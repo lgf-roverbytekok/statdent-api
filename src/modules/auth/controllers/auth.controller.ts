@@ -1,4 +1,10 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -60,6 +66,9 @@ export class AuthController {
     @CurrentUser() user: UserResponseDto,
     @Body() logoutDto: LogoutDto,
   ): Promise<void> {
+    if (!user || !user.id) {
+      throw new UnauthorizedException('No autorizado');
+    }
     await this.authService.logout(user.id, logoutDto.refreshToken);
   }
 
@@ -73,6 +82,9 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'No autorizado' })
   async getMe(@CurrentUser() user: UserResponseDto): Promise<UserResponseDto> {
+    if (!user || !user.id) {
+      throw new UnauthorizedException('No autorizado');
+    }
     return this.authService.getCurrentUser(user.id);
   }
 }

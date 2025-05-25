@@ -74,7 +74,7 @@ async function main() {
   const adminPersona = await prisma.persona.create({
     data: {
       nombre: 'Admin',
-      apellido: 'Default',
+      apellido: '',
       email: 'admin@admin.com',
       telefono: '123456789',
     },

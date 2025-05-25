@@ -12,9 +12,8 @@ import { LoginDto } from '../dto/login.dto';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { TokensResponseDto } from '../dto/tokens-response.dto';
 import { CurrentUser } from '../decorators/current-user.decorator';
-import { JwtPayload } from '../types/jwt-payload';
 import { LogoutDto } from '../dto/logout.dto';
-import { UserResponseDto } from '../../user/dto/user-response.dto';
+import { UserResponseDto } from 'src/modules/user/dto/user-response.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -58,10 +57,10 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'No autorizado' })
   async logout(
-    @CurrentUser() user: JwtPayload,
+    @CurrentUser() user: UserResponseDto,
     @Body() logoutDto: LogoutDto,
   ): Promise<void> {
-    await this.authService.logout(user.sub, logoutDto.refreshToken);
+    await this.authService.logout(user.id, logoutDto.refreshToken);
   }
 
   @Get('me')
@@ -73,7 +72,7 @@ export class AuthController {
     type: UserResponseDto,
   })
   @ApiResponse({ status: 401, description: 'No autorizado' })
-  async getMe(@CurrentUser() user: JwtPayload): Promise<UserResponseDto> {
-    return this.authService.getCurrentUser(user.sub);
+  async getMe(@CurrentUser() user: UserResponseDto): Promise<UserResponseDto> {
+    return this.authService.getCurrentUser(user.id);
   }
 }

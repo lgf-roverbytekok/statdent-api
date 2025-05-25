@@ -9,5 +9,8 @@ import { PaginationBuilderService } from 'src/core/builders/pagination-builder.s
   imports: [AppConfigModule],
   controllers: [UserController],
   providers: [UserService, PaginationBuilderService],
+  exports: [
+    UserService, // Export UserService so it can be used in other modules
+  ],
 })
 export class UserModule {}

@@ -9,15 +9,14 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AppConfigModule } from 'src/app-config/app-config.module';
 import { AppConfigService } from 'src/app-config/app-config.service';
-import { UserService } from '../user/user.service';
-import { PaginationBuilderService } from 'src/core/builders/pagination-builder.service';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     AppConfigModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      useFactory: async (appConfigService: AppConfigService) => ({
+      useFactory: (appConfigService: AppConfigService) => ({
         secret: appConfigService.jwtAccessSecret,
         signOptions: {
           expiresIn: appConfigService.jwtAccessExpiresIn,
@@ -26,13 +25,12 @@ import { PaginationBuilderService } from 'src/core/builders/pagination-builder.s
       inject: [AppConfigService],
       imports: [AppConfigModule],
     }),
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [
     JwtStrategy,
     AuthService,
-    UserService,
-    PaginationBuilderService,
     {
       provide: 'APP_GUARD',
       useFactory: (reflector: Reflector) => new JwtAuthGuard(reflector),

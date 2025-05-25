@@ -163,7 +163,7 @@ export class UserService {
       });
 
       if (!user) {
-        throw new NotFoundException(`User with ID ${id} not found`);
+        throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
       }
 
       const updateData: any = {};
@@ -171,7 +171,8 @@ export class UserService {
       if (
         updateUserDto.firstName ||
         updateUserDto.lastName ||
-        updateUserDto.phone
+        updateUserDto.phone ||
+        updateUserDto.email
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         updateData.persona = {
@@ -179,6 +180,9 @@ export class UserService {
             ...(updateUserDto.firstName && { nombre: updateUserDto.firstName }),
             ...(updateUserDto.lastName && { apellido: updateUserDto.lastName }),
             ...(updateUserDto.phone && { telefono: updateUserDto.phone }),
+            ...(updateUserDto.email && {
+              email: updateUserDto.email.toLowerCase().trim(),
+            }),
           },
         };
       }

@@ -21,6 +21,7 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 import { Roles } from 'src/modules/auth/decorators/roles.decorator';
 import { Role } from 'src/modules/auth/enums/role.enum';
+import { SectionResponseDto } from './dto/section-response.dto';
 
 @Roles(Role.Statistician)
 @ApiTags('Section')
@@ -38,7 +39,11 @@ export class SectionController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todas las secciones' })
-  @ApiResponse({ status: 200, description: 'Lista de secciones' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de secciones',
+    type: SectionResponseDto,
+  })
   findAll() {
     return this.sectionService.findAll();
   }

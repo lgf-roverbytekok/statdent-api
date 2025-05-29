@@ -4,6 +4,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
+import { SectionResponseDto } from './dto/section-response.dto';
 
 @Injectable()
 export class SectionService {
@@ -15,10 +16,38 @@ export class SectionService {
     });
   }
 
-  async findAll() {
-    return this.prisma.seccion.findMany(/*{
-      include: { codigos: true }, // Si quieres ver los códigos
-    }*/);
+  /**
+   * Devuelve todas las secciones, ordenadas según el
+   * criterio de min(nombre_codigo) y solo con `order`.
+   */
+  async findAll(): Promise<SectionResponseDto[]> {
+    // 1) Traer secciones con sus códigos ordenados internamente
+    const secciones = await this.prisma.seccion.findMany({
+      include: {
+        codigos: { orderBy: { nombre_codigo: 'asc' } },
+      },
+    });
+
+    // 2) Calcular minCodigo por sección
+    const withMin = secciones.map((sec) => ({
+      id_seccion: sec.id_seccion,
+      nombre_seccion: sec.nombre_seccion,
+      descripcion: sec.descripcion ?? undefined,
+      minCodigo: sec.codigos[0]?.nombre_codigo ?? '',
+    }));
+
+    // 3) Ordenar las secciones por minCodigo
+    withMin.sort((a, b) =>
+      a.minCodigo.localeCompare(b.minCodigo, undefined, { numeric: true }),
+    );
+
+    // 4) Mapear al DTO final, asignando `order` 1-based
+    return withMin.map((sec, idx) => ({
+      id_seccion: sec.id_seccion,
+      nombre_seccion: sec.nombre_seccion,
+      descripcion: sec.descripcion,
+      order: idx + 1,
+    }));
   }
 
   async findOne(id: number) {

@@ -165,4 +165,58 @@ export class ReportService {
     // 8) Generar y devolver PDF
     return this.pdfService.generatePdf(data);
   }
+
+  async getChartData(params: ReportParams) {
+    const { from, to } = params;
+
+    // Grupos de edad
+    const ageEntities = await this.prisma.grupo_edad.findMany({
+      orderBy: { edad_minima: 'asc' },
+    });
+    const ageLabelMap: Record<string, string> = {};
+    ageEntities.forEach(({ nombre_grupo_edad, edad_minima, edad_maxima }) => {
+      ageLabelMap[nombre_grupo_edad] =
+        edad_maxima !== null
+          ? `${edad_minima}-${edad_maxima}`
+          : `${edad_minima}+`;
+    });
+
+    // Registros filtrados
+    const registros = await this.prisma.registro.findMany({
+      where: { registro_diario: { fecha: { gte: from, lte: to } } },
+      include: { codigo: { include: { seccion: true } }, grupo_edad: true },
+    });
+
+    // Agrupación por sección > código > grupo
+    const dataMap = new Map<string, Map<string, Record<string, number>>>();
+    for (const r of registros) {
+      const section = r.codigo.seccion.nombre_seccion;
+      const code = r.codigo.descripcion
+        ? `${r.codigo.nombre_codigo} ${r.codigo.descripcion}`
+        : r.codigo.nombre_codigo;
+      const group = r.grupo_edad?.nombre_grupo_edad ?? 'Sin grupo';
+      const label = ageLabelMap[group] ?? 'Sin grupo';
+
+      if (!dataMap.has(section)) dataMap.set(section, new Map());
+      if (!dataMap.get(section)!.has(code)) dataMap.get(section)!.set(code, {});
+
+      const ageGroupMap = dataMap.get(section)!.get(code)!;
+      ageGroupMap[label] = (ageGroupMap[label] ?? 0) + r.cantidad;
+    }
+
+    // Serializar
+    const result = Array.from(dataMap.entries()).map(([section, codes]) => ({
+      section,
+      codes: Array.from(codes.entries()).map(([code, ageGroups]) => ({
+        code,
+        data: ageGroups,
+        total: Object.values(ageGroups).reduce((a, b) => a + b, 0),
+      })),
+    }));
+
+    return {
+      ageGroups: Object.values(ageLabelMap),
+      sections: result,
+    };
+  }
 }

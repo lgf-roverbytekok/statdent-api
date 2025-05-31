@@ -63,4 +63,18 @@ export class ReportController {
     res.setHeader('Content-Disposition', 'attachment; filename=report.pdf');
     res.send(buffer);
   }
+
+  @Post('chart')
+  @ApiOperation({ summary: 'Datos para generar reporte gráfico' })
+  @ApiBody({ type: ReportOptionsDto })
+  async chart(@Body() opts: ReportOptionsDto) {
+    return this.reportService.getChartData({
+      from: new Date(opts.from),
+      to: new Date(opts.to),
+      pageTitle: opts.pageTitle,
+      formCode: opts.formCode,
+      periodicity: opts.periodicity,
+      year: opts.year,
+    });
+  }
 }

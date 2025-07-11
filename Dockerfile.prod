@@ -1,0 +1,43 @@
+# Stage 1: Build the application
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files and install production dependencies
+COPY statdent-api/package*.json ./
+RUN npm ci --only=production
+
+# Copy the rest of the application source code
+COPY statdent-api/ ./
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Build the NestJS application
+RUN npm run build
+
+# Stage 2: Create the production image
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Create a non-root user for security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Copy dependencies and built application from the builder stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
+
+# Change ownership to the non-root user
+RUN chown -R appuser:appgroup /app
+
+# Switch to the non-root user
+USER appuser
+
+# Expose the application port
+EXPOSE 3000
+
+# Command to run the application in production mode
+CMD ["npm", "run", "start:prod"]

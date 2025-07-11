@@ -1,6 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Editors
 .idea
 .vscode/
-node_modules/
+
+# Node
+node_modules
 npm-debug.log
-dist/
-test/
+yarn-error.log
+
+# Build output
+dist
+.DS_Store
+
+# Env
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+Dockerfile
+.dockerignore

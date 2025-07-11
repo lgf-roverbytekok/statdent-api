@@ -2,19 +2,23 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 
 USER root
 
-# Crea el grupo de sistema y el usuario con su home
-RUN groupadd -r lgfdev \
- && useradd -rm -g lgfdev lgfdev
+# Create the system group and the user with their home
+RUN groupadd -r appuserdev \
+ && useradd -rm -g appuserdev appuserdev
 
-USER lgfdev
+USER appuserdev
 
-WORKDIR /app
+# Set the working directory
+WORKDIR /usr/src/app
 
-# Application dependencies
-COPY --chown=lgfdev:lgfdev package*.json ./
+# Copy package.json and package-lock.json
+COPY --chown=appuserdev:appuserdev package*.json ./
+
+# Install dependencies
 RUN npm ci
 
-COPY --chown=lgfdev:lgfdev . .
+# Copy the rest of the application's code
+COPY --chown=appuserdev:appuserdev . .
 
-EXPOSE 3000
+# Run the app in development mode
 CMD ["npm", "run", "start:dev"]
